@@ -1,6 +1,20 @@
+<div align="center">
+  
 # CrazyFlie Control
-
-A simulation of a Crazyflie drone running inside Gazebo, controlled via ROS 2. The drone takes off, hovers, then follows a figure-8 (well kind of) trajectory using a PD position and attitude controller.
+ 
+[![ROS2](https://img.shields.io/badge/ROS_2-Humble-22314E?style=for-the-badge&labelColor=2D2D2D&logo=ros&logoColor=white)](https://docs.ros.org/en/humble/index.html)
+&nbsp;&nbsp;
+[![Gazebo](https://img.shields.io/badge/Gazebo-Harmonic-FF7043?style=for-the-badge&labelColor=2D2D2D&logo=gazebo&logoColor=white)](https://gazebosim.org/docs/harmonic/getstarted/)
+&nbsp;&nbsp;
+[![Python](https://img.shields.io/badge/Python-3.10-4CAF50?style=for-the-badge&labelColor=2D2D2D&logo=python&logoColor=white)](https://python.org)
+&nbsp;&nbsp;
+[![Docker](https://img.shields.io/badge/Docker-Ubuntu-2496ED?style=for-the-badge&labelColor=2D2D2D&logo=docker&logoColor=white)](https://docs.docker.com/)
+ 
+A Crazyflie drone simulation running inside Gazebo, controlled via ROS 2. The drone takes off, hovers, then follows a figure-8 trajectory using a PD position and attitude controller.
+ 
+![Drone Simulation](assets/drone.gif)
+ 
+</div>
 
 ## Stack
 
