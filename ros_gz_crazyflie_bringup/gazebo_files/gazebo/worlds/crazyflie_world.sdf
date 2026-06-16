@@ -1,54 +1,103 @@
 <?xml version="1.0" ?>
-<!-- 
- ...........       ____  _ __
- |  ,-^-,  |      / __ )(_) /_______________ _____  ___
- | (  O  ) |     / __  / / __/ ___/ ___/ __ `/_  / / _ \
- | / ,..´  |    / /_/ / / /_/ /__/ /  / /_/ / / /_/  __/
-    +.......   /_____/_/\__/\___/_/   \__,_/ /___/\___/
- 
-MIT License
-
-Copyright (c) 2022 Bitcraze
--->
-
-<sdf version="1.6">
+<sdf version="1.8">
   <world name="crazyflie_world">
     <physics name="1ms" type="ignored">
       <max_step_size>0.001</max_step_size>
       <real_time_factor>1.0</real_time_factor>
     </physics>
-    <plugin
-      filename="gz-sim-physics-system"
-      name="gz::sim::systems::Physics">
-    </plugin>
-    <plugin
-      filename="gz-sim-user-commands-system"
-      name="gz::sim::systems::UserCommands">
-    </plugin>
-    <plugin
-      filename="gz-sim-scene-broadcaster-system"
-      name="gz::sim::systems::SceneBroadcaster">
-    </plugin>
-    <plugin
-      filename="gz-sim-sensors-system"
-      name="gz::sim::systems::Sensors">
+    <plugin filename="gz-sim-physics-system" name="gz::sim::systems::Physics"/>
+    <plugin filename="gz-sim-user-commands-system" name="gz::sim::systems::UserCommands"/>
+    <plugin filename="gz-sim-scene-broadcaster-system" name="gz::sim::systems::SceneBroadcaster"/>
+    <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
       <render_engine>ogre2</render_engine>
     </plugin>
 
+    <!-- GUI — this is where background and ambient light actually live -->
+    <gui fullscreen="0">
+      <plugin filename="MinimalScene" name="3D View">
+        <gz-gui>
+          <title>3D View</title>
+          <property type="bool" key="showTitleBar">false</property>
+          <property type="string" key="state">docked</property>
+        </gz-gui>
+        <engine>ogre2</engine>
+        <scene>scene</scene>
+        <ambient_light>0.15 0.15 0.2</ambient_light>
+        <background_color>0.05 0.05 0.1</background_color>
+        <!-- Camera starts at a nice 45 degree angle looking at the drone -->
+        <camera_pose>-1.5 -1.5 1.5 0 0.5 0.8</camera_pose>
+      </plugin>
+      <plugin filename="GzSceneManager" name="Scene Manager">
+        <gz-gui>
+          <property key="resizable" type="bool">false</property>
+          <property key="width" type="double">5</property>
+          <property key="height" type="double">5</property>
+          <property key="state" type="string">floating</property>
+          <property key="showTitleBar" type="bool">false</property>
+        </gz-gui>
+      </plugin>
+      <plugin filename="InteractiveViewControl" name="Interactive view control">
+        <gz-gui>
+          <property key="resizable" type="bool">false</property>
+          <property key="width" type="double">5</property>
+          <property key="height" type="double">5</property>
+          <property key="state" type="string">floating</property>
+          <property key="showTitleBar" type="bool">false</property>
+        </gz-gui>
+      </plugin>
+      <plugin filename="WorldControl" name="World control">
+        <gz-gui>
+          <title>World control</title>
+          <property type="bool" key="showTitleBar">false</property>
+          <property type="bool" key="resizable">false</property>
+          <property type="double" key="height">72</property>
+          <property type="double" key="width">121</property>
+          <property type="string" key="state">floating</property>
+          <anchors target="3D View">
+            <line own="left" target="left"/>
+            <line own="bottom" target="bottom"/>
+          </anchors>
+        </gz-gui>
+        <play_pause>true</play_pause>
+        <step>true</step>
+        <start_paused>false</start_paused>
+      </plugin>
+      <plugin filename="EntityTree" name="Entity tree">
+        <gz-gui/>
+      </plugin>
+    </gui>
+
+    <!-- Main directional light from the side -->
     <light type="directional" name="sun">
       <cast_shadows>true</cast_shadows>
       <pose>0 0 10 0 0 0</pose>
-      <diffuse>0.8 0.8 0.8 1</diffuse>
-      <specular>0.2 0.2 0.2 1</specular>
+      <diffuse>0.9 0.9 0.85 1</diffuse>
+      <specular>0.4 0.4 0.4 1</specular>
       <attenuation>
         <range>1000</range>
         <constant>0.9</constant>
         <linear>0.01</linear>
         <quadratic>0.001</quadratic>
       </attenuation>
-      <direction>-0.5 0.1 -0.9</direction>
+      <direction>-0.5 0.2 -0.8</direction>
     </light>
 
+    <!-- Soft fill light from the opposite side -->
+    <light type="directional" name="fill_light">
+      <cast_shadows>false</cast_shadows>
+      <pose>0 0 5 0 0 0</pose>
+      <diffuse>0.2 0.2 0.4 1</diffuse>
+      <specular>0.05 0.05 0.1 1</specular>
+      <attenuation>
+        <range>1000</range>
+        <constant>0.9</constant>
+        <linear>0.01</linear>
+        <quadratic>0.001</quadratic>
+      </attenuation>
+      <direction>0.5 -0.2 -0.5</direction>
+    </light>
+
+    <!-- Dark floor -->
     <model name="ground_plane">
       <static>true</static>
       <link name="link">
@@ -68,13 +117,14 @@ Copyright (c) 2022 Bitcraze
             </plane>
           </geometry>
           <material>
-            <ambient>0.8 0.8 0.8 1</ambient>
-            <diffuse>0.8 0.8 0.8 1</diffuse>
-            <specular>0.8 0.8 0.8 1</specular>
+            <ambient>0.1 0.1 0.15 1</ambient>
+            <diffuse>0.15 0.15 0.2 1</diffuse>
+            <specular>0.05 0.05 0.05 1</specular>
           </material>
         </visual>
       </link>
     </model>
+
     <include>
       <uri>model://crazyflie</uri>
       <name>crazyflie</name>
